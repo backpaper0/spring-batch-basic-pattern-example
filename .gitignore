@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### MyBatis Generator ###
+src/main/java/com/example/gen/
+src/main/resources/com/example/gen/
+

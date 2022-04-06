@@ -1,0 +1,25 @@
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="simple" targetRuntime="MyBatis3">
+		<plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin" />
+
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="org.h2.Driver" connectionURL="jdbc:h2:file:./target/data" userId="sa"
+			password="pass1234" />
+
+		<javaModelGenerator targetPackage="com.example.gen.model" targetProject="src/main/java" />
+
+		<sqlMapGenerator targetPackage="com.example.gen.mapper" targetProject="src/main/resources" />
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.example.gen.mapper"
+			targetProject="src/main/java" />
+
+		<table tableName="address">
+			<generatedKey column="id" sqlStatement="JDBC" />
+		</table>
+
+	</context>
+</generatorConfiguration>
