@@ -1,7 +1,3 @@
-`KEN_ALL.CSV`をダウンロードして`target`の下に配置する。
-
-- https://www.post.japanpost.jp/zipcode/dl/oogaki-zip.html
-
 Spring Batch用のテーブルを作成する。
 
 ```bash
@@ -13,6 +9,10 @@ MyBatis関連のクラスを生成する。
 ```bash
 ./mvnw mybatis-generator:generate
 ```
+
+`KEN_ALL.CSV`をダウンロードして`target`の下に配置する。
+
+- https://www.post.japanpost.jp/zipcode/dl/oogaki-zip.html
 
 CSVファイル(`KEN_ALL.CSV`)を読み込んでDBへ保存するバッチを実行する。
 
