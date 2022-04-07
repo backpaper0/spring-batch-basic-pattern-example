@@ -22,7 +22,10 @@ CSVファイル(`KEN_ALL.CSV`)を読み込んでDBへ保存するバッチを実
 
 DBからデータを読み取ってCSVファイルを出力するバッチを実行する。
 
-TODO
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=dbToFileJob file=target/output.csv"
+```
+
 
 DBからデータを読み取ってデータを加工してDBへ保存するバッチを実行する。
 

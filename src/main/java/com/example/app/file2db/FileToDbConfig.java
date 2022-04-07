@@ -3,8 +3,8 @@ package com.example.app.file2db;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -27,7 +27,7 @@ public class FileToDbConfig {
 	private AddressWriter addressWriter;
 
 	@Bean
-	@JobScope
+	@StepScope
 	public ItemStreamReader<Address> fileReader(@Value("#{jobParameters['file']}") String file) {
 
 		//TODO ファイルパスのバリデーション、ファイルの存在チェックなど
