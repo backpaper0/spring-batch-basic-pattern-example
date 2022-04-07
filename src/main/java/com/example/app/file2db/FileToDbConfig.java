@@ -1,5 +1,8 @@
 package com.example.app.file2db;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
+import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -14,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.PathResource;
 
+import com.example.gen.mapper.AddressMapper;
 import com.example.gen.model.Address;
 
 @Configuration(proxyBeanMethods = false)
@@ -24,7 +28,7 @@ public class FileToDbConfig {
 	@Autowired
 	private StepBuilderFactory steps;
 	@Autowired
-	private AddressWriter addressWriter;
+	private SqlSessionFactory sqlSessionFactory;
 
 	@Bean
 	@StepScope
@@ -60,7 +64,16 @@ public class FileToDbConfig {
 	}
 
 	@Bean
-	public Step fileToDbStep(ItemStreamReader<Address> fileReader) {
+	@StepScope
+	public MyBatisBatchItemWriter<Address> addressWriter() {
+		return new MyBatisBatchItemWriterBuilder<Address>()
+				.sqlSessionFactory(sqlSessionFactory)
+				.statementId(AddressMapper.class.getName() + ".insert")
+				.build();
+	}
+
+	@Bean
+	public Step fileToDbStep(ItemStreamReader<Address> fileReader, MyBatisBatchItemWriter<Address> addressWriter) {
 		return steps.get("fileToDbStep")
 				.<Address, Address> chunk(1000) //TODO チャンクサイズをプロパティで設定できるようにする
 				.reader(fileReader)

@@ -78,7 +78,7 @@ public class DbToFileConfig {
 	@Bean
 	public Step dbToFileStep(MyBatisCursorItemReader<Address> addressReader, ItemStreamWriter<Address> fileWriter) {
 		return steps.get("fileToDbStep")
-				.<Address, Address> chunk(100000) //TODO チャンクサイズをプロパティで設定できるようにする
+				.<Address, Address> chunk(1000) //TODO チャンクサイズをプロパティで設定できるようにする
 				.reader(addressReader)
 				.writer(fileWriter)
 				.build();
