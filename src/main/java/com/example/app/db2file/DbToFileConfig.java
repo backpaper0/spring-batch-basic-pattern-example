@@ -13,6 +13,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemStreamWriter;
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class DbToFileConfig {
 
 	@Bean
 	@StepScope
-	public ItemStreamWriter<Address> fileWriter(@Value("#{jobParameters['file']}") String file) {
+	public FlatFileItemWriter<Address> fileWriter(@Value("#{jobParameters['file']}") String file) {
 
 		//TODO ファイルパスのバリデーション、ファイルの存在チェックなど
 

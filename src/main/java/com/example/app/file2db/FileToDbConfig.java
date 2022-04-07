@@ -10,6 +10,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemStreamReader;
+import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class FileToDbConfig {
 
 	@Bean
 	@StepScope
-	public ItemStreamReader<Address> fileReader(@Value("#{jobParameters['file']}") String file) {
+	public FlatFileItemReader<Address> fileReader(@Value("#{jobParameters['file']}") String file) {
 
 		//TODO ファイルパスのバリデーション、ファイルの存在チェックなど
 

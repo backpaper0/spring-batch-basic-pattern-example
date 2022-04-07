@@ -26,8 +26,12 @@ DBからデータを読み取ってCSVファイルを出力するバッチを実
 ./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=dbToFileJob file=target/output.csv"
 ```
 
-
 DBからデータを読み取ってデータを加工してDBへ保存するバッチを実行する。
 
 TODO
 
+テーブルをクリアするバッチを実行する。
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=oneShotJob"
+```
