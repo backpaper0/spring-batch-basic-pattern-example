@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class OneShotConfig {
 
 	@Autowired
@@ -21,15 +21,15 @@ public class OneShotConfig {
 
 	@Bean
 	public Step oneShotStep() {
-		return steps.get("oneShotStep")
+		return steps.get("OneShot")
 				.tasklet(deleteAllAddressTasklet)
 				.build();
 	}
 
 	@Bean
-	public Job oneShotJob(Step oneShotStep) {
-		return jobs.get("oneShotJob")
-				.start(oneShotStep)
+	public Job oneShotJob() {
+		return jobs.get("OneShot")
+				.start(oneShotStep())
 				.incrementer(new RunIdIncrementer())
 				.build();
 	}

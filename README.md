@@ -10,20 +10,20 @@ MyBatis関連のクラスを生成する。
 ./mvnw mybatis-generator:generate
 ```
 
-`KEN_ALL.CSV`をダウンロードして`target`の下に配置する。
+`KEN_ALL.CSV`をダウンロードして配置する。
 
 - https://www.post.japanpost.jp/zipcode/dl/oogaki-zip.html
 
 CSVファイル(`KEN_ALL.CSV`)を読み込んでDBへ保存するバッチを実行する。
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=fileToDbJob file=target/KEN_ALL.CSV"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=FileToDb input.file=KEN_ALL.CSV"
 ```
 
 DBからデータを読み取ってCSVファイルを出力するバッチを実行する。
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=dbToFileJob file=target/output.csv"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=DbToFile output.file=output.csv"
 ```
 
 DBからデータを読み取ってデータを加工してDBへ保存するバッチを実行する。
@@ -33,5 +33,5 @@ TODO
 テーブルをクリアするバッチを実行する。
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=oneShotJob"
+./mvnw spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.names=OneShot"
 ```

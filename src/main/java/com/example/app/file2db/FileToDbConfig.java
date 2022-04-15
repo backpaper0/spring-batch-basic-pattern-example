@@ -9,7 +9,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import org.springframework.core.io.PathResource;
 import com.example.gen.mapper.AddressMapper;
 import com.example.gen.model.Address;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class FileToDbConfig {
 
 	@Autowired
@@ -33,7 +32,7 @@ public class FileToDbConfig {
 
 	@Bean
 	@StepScope
-	public FlatFileItemReader<Address> fileReader(@Value("#{jobParameters['file']}") String file) {
+	public FlatFileItemReader<Address> addressFileReader(@Value("#{jobParameters['output.file']}") String file) {
 
 		//TODO ファイルパスのバリデーション、ファイルの存在チェックなど
 
@@ -66,7 +65,7 @@ public class FileToDbConfig {
 
 	@Bean
 	@StepScope
-	public MyBatisBatchItemWriter<Address> addressWriter() {
+	public MyBatisBatchItemWriter<Address> addressDbWriter() {
 		return new MyBatisBatchItemWriterBuilder<Address>()
 				.sqlSessionFactory(sqlSessionFactory)
 				.statementId(AddressMapper.class.getName() + ".insert")
@@ -74,19 +73,19 @@ public class FileToDbConfig {
 	}
 
 	@Bean
-	public Step fileToDbStep(ItemStreamReader<Address> fileReader, MyBatisBatchItemWriter<Address> addressWriter) {
-		return steps.get("fileToDbStep")
+	public Step fileToDbStep() {
+		return steps.get("FileToDb")
 				.<Address, Address> chunk(1000) //TODO チャンクサイズをプロパティで設定できるようにする
-				.reader(fileReader)
+				.reader(addressFileReader(null))
 				//TODO ファイル内容のバリデーションをItemProcessorで行う
-				.writer(addressWriter)
+				.writer(addressDbWriter())
 				.build();
 	}
 
 	@Bean
-	public Job fileToDbJob(Step fileToDbStep) {
-		return jobs.get("fileToDbJob")
-				.start(fileToDbStep)
+	public Job fileToDbJob() {
+		return jobs.get("FileToDb")
+				.start(fileToDbStep())
 				.incrementer(new RunIdIncrementer())
 				.build();
 	}

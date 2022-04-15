@@ -12,7 +12,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemStreamWriter;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import org.springframework.core.io.PathResource;
 import com.example.gen.mapper.AddressMapper;
 import com.example.gen.model.Address;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class DbToFileConfig {
 
 	@Autowired
@@ -36,7 +35,7 @@ public class DbToFileConfig {
 
 	@Bean
 	@StepScope
-	public MyBatisCursorItemReader<Address> addressReader() {
+	public MyBatisCursorItemReader<Address> addressDbReader() {
 		return new MyBatisCursorItemReaderBuilder<Address>()
 				.sqlSessionFactory(sqlSessionFactory)
 				.queryId(AddressMapper.class.getName() + ".selectByExample")
@@ -46,7 +45,7 @@ public class DbToFileConfig {
 
 	@Bean
 	@StepScope
-	public FlatFileItemWriter<Address> fileWriter(@Value("#{jobParameters['file']}") String file) {
+	public FlatFileItemWriter<Address> addressFileWriter(@Value("#{jobParameters['input.file']}") String file) {
 
 		//TODO ファイルパスのバリデーション、ファイルの存在チェックなど
 
@@ -77,18 +76,18 @@ public class DbToFileConfig {
 	}
 
 	@Bean
-	public Step dbToFileStep(MyBatisCursorItemReader<Address> addressReader, ItemStreamWriter<Address> fileWriter) {
-		return steps.get("fileToDbStep")
+	public Step dbToFileStep() {
+		return steps.get("DbToFile")
 				.<Address, Address> chunk(1000) //TODO チャンクサイズをプロパティで設定できるようにする
-				.reader(addressReader)
-				.writer(fileWriter)
+				.reader(addressDbReader())
+				.writer(addressFileWriter(null))
 				.build();
 	}
 
 	@Bean
-	public Job dbToFileJob(Step dbToFileStep) {
-		return jobs.get("dbToFileJob")
-				.start(dbToFileStep)
+	public Job dbToFileJob() {
+		return jobs.get("DbToFile")
+				.start(dbToFileStep())
 				.incrementer(new RunIdIncrementer())
 				.build();
 	}

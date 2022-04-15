@@ -36,3 +36,6 @@ build/
 src/main/java/com/example/gen/
 src/main/resources/com/example/gen/
 
+### Sample Files ###
+*.csv
+
